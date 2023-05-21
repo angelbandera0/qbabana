@@ -4,7 +4,7 @@ import 'product.dart';
 part 'location.g.dart';
 @Collection()
 class LocationZone {
-
+  @isarAutoIncrementId
   @Id()
   late int id;
 

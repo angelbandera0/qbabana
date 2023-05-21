@@ -6,6 +6,7 @@ import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'core/platform/isardb.dart';
 import 'core/platform/shared_prefs.dart';
 import 'di/inyector.dart';
 import 'features/account_management/presentation/pages/home_new.dart';
@@ -13,11 +14,16 @@ import 'features/account_management/presentation/pages/home_new.dart';
 int? initScreen;
 void main() async {
   Injector.initDev();
+
   WidgetsFlutterBinding.ensureInitialized();
-  SharedPreferences prefs = await SharedPreferences.getInstance();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
+  //IsarDBImpl isar =  IsarDBImpl();
+  //isar.initIsar();
+  Injector.instance?.isarDB.initIsar();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
   initScreen = prefs.getInt('initScreen');
-  //await IsarDBImpl.initIsar();
+
   Injector.instance?.isarDB.initIsar();
   if(await SharedPreferencesManager().getPassword()==''){
     await SharedPreferencesManager().setPassword("1");

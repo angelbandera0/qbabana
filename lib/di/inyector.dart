@@ -3,12 +3,23 @@ import 'dart:async';
 import 'package:flutter/widgets.dart' as Material;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kiwi/kiwi.dart';
+import 'package:qbabana/features/account_management/data/model/product.dart';
+import 'package:qbabana/features/account_management/domain/usercases/get_category_usercase.dart';
+import 'package:qbabana/features/account_management/presentation/bloc/category/category_bloc.dart';
 
 import '../../../../core/global/endpoints.dart';
 import '../../../../core/platform/network_handler.dart';
 import '../../../../core/platform/shared_prefs.dart';
 import '../../../../core/utils/logger.dart';
 import '../core/platform/isardb.dart';
+import '../features/account_management/data/respository/category_repository_impl.dart';
+import '../features/account_management/data/respository/product_repository_impl.dart';
+import '../features/account_management/domain/repository/category_repository.dart';
+import '../features/account_management/domain/repository/product_repository.dart';
+import '../features/account_management/domain/usercases/add_category_usercase.dart';
+import '../features/account_management/domain/usercases/add_product_usercase.dart';
+import '../features/account_management/domain/usercases/get_product_usercase.dart';
+import '../features/account_management/presentation/bloc/product/product_bloc.dart';
 
 ///Part dependency injector engine and Part service locator.
 ///The main purpose of [Injector] is to provide bloCs instances and initialize the app components depending the current scope.
@@ -96,16 +107,18 @@ class Injector {
 
   _registerLocalAuth() {}
 
-  _registerApiLayer() {
-
-  }
+  _registerApiLayer() {}
 
   _registerUserCaseLayer() {
+    container.registerFactory(
+        (container) => GetCategoryUserCase(container.resolve()));
+    container
+        .registerFactory((container) => AddCategoryUserCase(container.resolve()));
+    container
+        .registerFactory((container) => AddProductUserCase(container.resolve()));
+    container.registerFactory(
+            (container) => GetProductUserCase(container.resolve()));
     /*container
-        .registerFactory((container) => LogInUserCase(container.resolve()));
-    container
-        .registerFactory((container) => LoadDbUserCase(container.resolve()));
-    container
         .registerFactory((container) => GetActiveUserCase(container.resolve()));
     container
         .registerFactory((container) => GetLocalsUserCase(container.resolve()));
@@ -124,8 +137,6 @@ class Injector {
     // container.registerSingleton<ICategoryDb, CategoryDbImplementation>(
     //     (c) => CategoryDbImplementation(container.resolve()));
     //container.registerSingleton((container) => IsarDB());
-
-
   }
 
   _registerDaoLayer() {
@@ -133,14 +144,14 @@ class Injector {
 //        (c) => UserDao(container.resolve(), container.resolve()));
 //    container.registerSingleton<IContactDao, ContactDao>((c) => ContactDao());
     //container.registerSingleton((container) => IsarDB());
-
   }
 
   _registerRepositoryLayer() {
-    /*container.registerSingleton<AccountManagementRepository>((c) =>
-        AccountManagementRepositoryImpl(
-            c.resolve(), c.resolve(), c.resolve()));
-    container.registerSingleton<ScanManagementRepository>((c) =>
+    container.registerSingleton<CategoryRepository>(
+        (c) => CategoryRepositoryImpl(c.resolve(), c.resolve()));
+    container.registerSingleton<ProductRepository>(
+            (c) => ProductRepositoryImpl(c.resolve(), c.resolve()));
+    /*container.registerSingleton<ScanManagementRepository>((c) =>
         ScanManagementRepositoryImpl(
             c.resolve(), c.resolve()));
 */
@@ -148,8 +159,15 @@ class Injector {
 
   ///Register the blocs here
   _registerBloCs() {
-    /*container.registerFactory((c) => LogInBloc(c.resolve(), c.resolve()));
-    container.registerFactory((c) => HomeBloc());
+    container.registerFactory((c) => CategoryBloc(c.resolve(),
+        c.resolve(),
+        c.resolve()
+    ));
+    container.registerFactory((c) => ProductBloc(c.resolve(),
+        c.resolve(),
+        c.resolve()
+    ));
+    /*container.registerFactory((c) => HomeBloc());
     container.registerFactory((c) => ViewListBloc(c.resolve()));
     container.registerFactory((c) => GenerateQrBloc(c.resolve(),c.resolve()));
     container.registerFactory((c) => ScanBloc(c.resolve(),c.resolve(),c.resolve(),c.resolve(),c.resolve(),c.resolve()));
@@ -171,7 +189,6 @@ class Injector {
     );
     container.registerSingleton((container) => StreamController.broadcast());
     container.registerSingleton<IsarDB>((c) => IsarDBImpl());
-
   }
 
   ///returns the current instance of the logger
@@ -185,7 +202,6 @@ class Injector {
   SharedPreferencesManager get sharedPreferences => container.resolve();
 
   StreamController get streamController => container.resolve();
-
 
   IsarDB get isarDB => container.resolve();
 

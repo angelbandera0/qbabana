@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:qbabana/features/account_management/presentation/pages/category.dart';
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
 
@@ -7,14 +8,14 @@ class Home extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
 
-        title: Text("QBABANA"),
+        title: const Text("QBABANA"),
         centerTitle: true,
       ),
       drawer: Drawer(
           child: ListView(
             padding: EdgeInsets.zero,
-            children: const <Widget>[
-              DrawerHeader(
+            children:  <Widget>[
+              const DrawerHeader(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(colors: [
                     Colors.indigo,
@@ -30,23 +31,26 @@ class Home extends StatelessWidget {
                   ),
                 ),
               ),
-              ListTile(
+              const ListTile(
                 leading: Icon(Icons.settings),
                 title: Text('Acerca De'),
               ),
-              ListTile(
+              const ListTile(
                 leading: Icon(Icons.settings),
                 title: Text('Contactos'),
               ),
               ListTile(
-                leading: Icon(Icons.message),
-                title: Text('Gestionar Productos'),
+                leading: const Icon(Icons.message),
+                title: const Text('Categorías'),
+                onTap: (){
+                  Navigator.push(context,MaterialPageRoute(builder: (context)=>const CategoryPage()));
+                },
               ),
-              ListTile(
+              const ListTile(
                 leading: Icon(Icons.account_circle),
                 title: Text('Gestionar Ubicacion'),
               ),
-              ListTile(
+              const ListTile(
                 leading: Icon(Icons.settings),
                 title: Text('Configuración'),
               ),
@@ -68,7 +72,7 @@ class Home extends StatelessWidget {
                   cuadro()
                 ],
               ),
-              SizedBox(height: 20,),
+              const SizedBox(height: 20,),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -86,10 +90,10 @@ class Home extends StatelessWidget {
 
   cuadro(){
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 10),
+      margin: const EdgeInsets.symmetric(horizontal: 10),
       width: 150,
       height: 150,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(20 )),
         color: Colors.red,
       ),

@@ -28,8 +28,8 @@ const ProductSchema = CollectionSchema(
   listProperties: {},
   indexIds: {},
   indexValueTypes: {},
-  linkIds: {r'student': 0},
-  backlinkLinkNames: {r'student': r'products'},
+  linkIds: {r'category': 0, r'student': 1},
+  backlinkLinkNames: {r'category': r'productss', r'student': r'products'},
   getId: _productGetId,
   setId: _productSetId,
   getLinks: _productGetLinks,
@@ -56,7 +56,7 @@ void _productSetId(Product object, int id) {
 }
 
 List<IsarLinkBase<dynamic>> _productGetLinks(Product object) {
-  return [object.student];
+  return [object.category, object.student];
 }
 
 void _productSerializeNative(
@@ -197,6 +197,7 @@ P _productDeserializePropWeb<P>(Object jsObj, String propertyName) {
 }
 
 void _productAttachLinks(IsarCollection<dynamic> col, int id, Product object) {
+  object.category.attach(col, col.isar.categorys, r'category', id);
   object.student.attach(col, col.isar.locationZones, r'student', id);
 }
 
@@ -778,6 +779,17 @@ extension ProductQueryFilter
 
 extension ProductQueryLinks
     on QueryBuilder<Product, Product, QFilterCondition> {
+  QueryBuilder<Product, Product, QAfterFilterCondition> category(
+      FilterQuery<Category> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(
+        query.collection.isar.categorys,
+        q,
+        r'category',
+      );
+    });
+  }
+
   QueryBuilder<Product, Product, QAfterFilterCondition> student(
       FilterQuery<LocationZone> q) {
     return QueryBuilder.apply(this, (query) {

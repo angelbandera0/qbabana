@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:path_provider/path_provider.dart';
+import 'package:qbabana/features/account_management/data/model/category.dart';
+import 'package:qbabana/features/account_management/data/model/location.dart';
+import 'package:qbabana/features/account_management/data/model/product.dart';
 
 import '../utils/utils.dart';
 
@@ -20,12 +23,14 @@ class IsarDBImpl extends IsarDB with Utils {
     initIsar();
   }
   @override
-  Isar get isar=>_isar;
+  Isar get isar => _isar;
 
   @override
   void initIsar() async {
     dir = await getApplicationSupportDirectory();
-    /*_isar = await Isar.open([ActiveSchema, LocalSchema, ReportSchema],
-        directory: dir.path);*/
+    dir = await getApplicationSupportDirectory();
+    _isar = await Isar.open([ProductSchema, LocationZoneSchema, CategorySchema],
+        directory: dir.path);
+
   }
 }
